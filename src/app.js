@@ -6,6 +6,7 @@ import Kinvey from "./helpers/kinvey";
 window.loggedIn = false;
 window.db = new Kinvey("kid_HygXSUrft", "018f8ac64fd04124820f30424c08d9e6");
 window.msgs = [];
+window.sharedData = {};
 
 
 const app = Sammy("#rooter", function () {
@@ -27,6 +28,22 @@ const app = Sammy("#rooter", function () {
 	// @desc     allows user to sign up, sends data to database
 	// @access   Public
 	this.post("#/Signup", userCtrl.postRegistration);
+
+	// @route    GET  /
+	// @desc     render to the login page
+	// @access   Public
+	this.get("#/Signin", userCtrl.getLogin) 
+	
+	// @route    POST  /
+	// @desc     allows user to sign in 
+	// @access   Private
+	this.post("#/Postlogin", userCtrl.postlogin);
+
+	
+	// @route    GET  /
+	// @desc     logout
+	// @access   Private
+	this.get("#/Logout", userCtrl.getLogout) 
 });
 
 app.run("#/");
