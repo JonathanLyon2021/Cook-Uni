@@ -1,6 +1,7 @@
 export default class Recipe {
 	getHome() {
-		const viewData = { loggedIn, msgs };
+		const viewData = { loggedIn, msgs, ...sharedData };
+		
 		console.log(viewData);
 		this.loadPartials({
 			navbar: "../views/partials/navbar.hbs",
