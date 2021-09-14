@@ -1,6 +1,8 @@
+// import { loginValidation } from "../validation.js";
+
 export default class User {
 	getRegistration() {
-		const viewData = { loggedIn };
+		const viewData = { loggedIn, msgs };
 		console.log(viewData);
 		this.loadPartials({
 			navbar: "../views/partials/navbar.hbs",
@@ -16,6 +18,35 @@ export default class User {
 		console.log("postRegistration");
 		const { firstName, lastName, username, password, repeatPassword } =
 			this.params;
+		
+		if (!firstName) {
+			msgs.push({ msg: "Firstname Required", class: "alert-danger" });
+		}
+		if (!lastName) {
+			msgs.push({ msg: "Lastname Required", class: "alert-danger" });
+		}
+		if (!username) {
+			msgs.push({ msg: "Username Required", class: "alert-danger" });
+		}
+		if (!password) {
+			msgs.push({ msg: "Password Required", class: "alert-danger" });
+		}
+		if (!repeatPassword) {
+			msgs.push({
+				msg: "Repeat Password Required",
+				class: "alert-danger",
+			});
+		}
+		if (!validator.equals(password, repeatPassword)) {
+			msgs.push({ msg: "Passwords do not match", class: "alert-danger" });
+		}
+		console.log(msgs);
+		if (msgs.length !== 0) {
+			this.redirect("#/Registration");
+
+			return;
+		}
+
 		db.signup(this.params)
 			.then((res) => {
 				//create a success message
@@ -34,7 +65,7 @@ export default class User {
 				});
 
 				//redirect the user
-				// this.redirect("#/Signup")
+				this.redirect("#/Signup");
 			});
 	}
 	getLogin() {
@@ -51,8 +82,37 @@ export default class User {
 	}
 
 	postlogin() {
-		console.log("postlogin");
-		// const { username, password } = this.params;
+		console.log(msgs);
+		msgs = [];
+		const { username, password } = this.params;
+		let isValid = true;
+
+		if (!username) {
+			msgs.push({ msg: "Username Required", class: "alert-danger" });
+			isValid = false;
+		} else if (!validator.isLength(username, { min: 3 })) {
+			msgs.push({
+				msg: "Username must be 3 characters minimum",
+				class: "alert-danger",
+			});
+			isValid = false;
+		}
+		if (!password) {
+			msgs.push({ msg: "Password required", class: "alert-danger" });
+			isValid = false;
+		} else if (!validator.isLength(password, { min: 6, max: 15 })) {
+			msgs.push({
+				msg: "Password must be 6 - 15 characters",
+				class: "alert-danger",
+			});
+			isValid = false;
+		}
+		if (!isValid) {
+			this.redirect("#/Signin");
+
+			return;
+		}
+
 		db.login(this.params)
 			.then((res) => {
 				console.log(res);
