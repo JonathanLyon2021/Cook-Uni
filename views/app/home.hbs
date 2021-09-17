@@ -1,4 +1,11 @@
 {{>navbar}}
+
+{{#if isLoading}}
+<div class="text-center mt-5 ">
+  <img class="loading-icon" src="../../images/loading-icon.jpg" alt="" width="200px" height="200px">
+</div>
+{{else}}
+
 {{>notifications}}
 
 
@@ -14,7 +21,8 @@
 <h1 class="text-center">Our Recipes</h1>
 
 
-
+{{#if allRecipes}}
+{{#each allRecipes}}
 <div id="sharedRecipes">
 	<div class="container">
 		<div class="row">
@@ -23,27 +31,27 @@
 
 					<div class="team-front">
 						<img
-							src="https://cdn.pixabay.com/photo/2017/10/09/19/29/eat-2834549__340.jpg"
+							src="{{categoryImageURL}}"
 						/>
-						<h3>Meal Name</h3>
-						<p>Vegetables and legumes/beans CATEGORY</p>
+						<h3>{{meal}}</h3>
+						<p>{{category}}</p>
 					</div>
 
 					<div class="team-back">
 						<div class="back-side-info">
 							<h4>Ingredients</h4>
+
 							<ul>
-								<li>First ingredients</li>
-								<li>Second ingredients</li>
-								<li>Third ingredients</li>
-								<li>...</li>
+								{{#each ingredients}}
+								<li>{{this}}</li>
+								{{/each}}
 							</ul>
-							<a href="#">View the recepie</a>
+							<a href="#/details/{{_id}}">View the recepie</a>
 						</div>
 
 						<img
 							class="foodImage"
-							src="https://t3.ftcdn.net/jpg/00/25/90/48/240_F_25904887_fhZJ692ukng3vQxzHldvuN981OiYVlJ1.jpg"
+							src="{{foodImageURL}}"
 						/>
 					</div>
 
@@ -51,15 +59,18 @@
 			</div>
 		</div>
 	</div>
+	{{/each}}
+{{else}}
 <div id="foodNotFound">
 	<img
 		src="https://t4.ftcdn.net/jpg/00/62/17/31/240_F_62173114_ozantkVtkPgzL0fxssAkTqKX1FHPr0UW.jpg"
 	/>
 	<h3>Food not found...</h3>
 </div>
-
+{{/if}}
+{{/if}}
 {{/if}}
 
-
 </div>
+
 {{>footer}}

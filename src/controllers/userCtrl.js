@@ -18,7 +18,7 @@ export default class User {
 		console.log("postRegistration");
 		const { firstName, lastName, username, password, repeatPassword } =
 			this.params;
-		
+
 		if (!firstName) {
 			msgs.push({ msg: "Firstname Required", class: "alert-danger" });
 		}
@@ -77,12 +77,11 @@ export default class User {
 			footer: "../views/partials/footer.hbs",
 		}).then(function () {
 			this.render("../views/users/login.hbs", viewData).swap();
-			// clearStates();
+			msgs = [];
 		});
 	}
 
 	postlogin() {
-		console.log(msgs);
 		msgs = [];
 		const { username, password } = this.params;
 		let isValid = true;
@@ -112,11 +111,13 @@ export default class User {
 
 			return;
 		}
-
+		sharedData.isLoading = true;
+		this.redirect("#/");
 		db.login(this.params)
 			.then((res) => {
-				console.log(res);
 				loggedIn = true;
+				sharedData.isLoading = false;
+
 				sessionStorage.setItem("userId", res._id);
 				sessionStorage.setItem("firstName", res.firstName);
 				sessionStorage.setItem("lastName", res.lastName);

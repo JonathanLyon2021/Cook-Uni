@@ -1,7 +1,12 @@
 export default class Recipe {
 	getHome() {
 		const viewData = { loggedIn, msgs, ...sharedData };
-		
+		if(allRecipes.length >0){
+			viewData.allRecipes = allRecipes;
+		}
+		else {
+			viewData.allRecipes = [];
+		}
 		console.log(viewData);
 		this.loadPartials({
 			navbar: "../views/partials/navbar.hbs",

@@ -7,13 +7,19 @@ window.loggedIn = false;
 window.db = new Kinvey("kid_HygXSUrft", "018f8ac64fd04124820f30424c08d9e6");
 window.msgs = [];
 window.sharedData = {};
-
+window.allRecipes = [];
+window.isLoading = false;
 
 const app = Sammy("#rooter", function () {
 	this.use("Handlebars", "hbs");
 	const recipeCtrl = new Recipe();
 	const userCtrl = new User();
-    
+
+	db.get("recipes", null, { username: "guest", password: "guest" }).then(
+		(data) => {
+			allRecipes = data;
+		}
+	);
 	// @route    GET  /
 	// @desc     render Home Page for a logged-In user
 	// @access   Public
@@ -32,18 +38,17 @@ const app = Sammy("#rooter", function () {
 	// @route    GET  /
 	// @desc     render to the login page
 	// @access   Public
-	this.get("#/Signin", userCtrl.getLogin) 
-	
+	this.get("#/Signin", userCtrl.getLogin);
+
 	// @route    POST  /
-	// @desc     allows user to sign in 
+	// @desc     allows user to sign in
 	// @access   Private
 	this.post("#/Postlogin", userCtrl.postlogin);
 
-	
 	// @route    GET  /
 	// @desc     logout
 	// @access   Private
-	this.get("#/Logout", userCtrl.getLogout) 
+	this.get("#/Logout", userCtrl.getLogout);
 });
 
 app.run("#/");
