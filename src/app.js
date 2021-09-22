@@ -49,6 +49,16 @@ const app = Sammy("#rooter", function () {
 	// @desc     logout
 	// @access   Private
 	this.get("#/Logout", userCtrl.getLogout);
+
+	// @route    GET  /
+	// @desc    share recipe
+	// @access   Private
+	this.get("#/Share", recipeCtrl.getShare);
+
+	// @route    POST  /
+	// @desc     allows user to post/share recipe
+	// @access   Private
+	this.post("#/handleShare", recipeCtrl.postHandleShare);
 });
 
 app.run("#/");
