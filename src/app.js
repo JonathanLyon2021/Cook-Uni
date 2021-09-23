@@ -10,6 +10,7 @@ window.sharedData = {};
 window.allRecipes = [];
 window.isLoading = false;
 
+
 const app = Sammy("#rooter", function () {
 	this.use("Handlebars", "hbs");
 	const recipeCtrl = new Recipe();
@@ -59,6 +60,21 @@ const app = Sammy("#rooter", function () {
 	// @desc     allows user to post/share recipe
 	// @access   Private
 	this.post("#/handleShare", recipeCtrl.postHandleShare);
+
+	// @route    GET  /
+	// @desc    getting the details of the recipe
+	// @access   Private
+	this.get("#/details/:id", recipeCtrl.getDetails);
+	
+	// @route    GET  /
+	// @desc    delete recipe
+	// @access   Private
+	this.get("#/archive/:id", recipeCtrl.getArchive);
+
+	// @route    POST  /
+	// @desc     likes counter
+	// @access   Private
+	this.get("#/likes/:id", recipeCtrl.getLikes);
 });
 
 app.run("#/");

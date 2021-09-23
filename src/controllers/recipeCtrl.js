@@ -32,7 +32,7 @@ export default class Recipe {
 
 	postHandleShare() {
 		msgs = [];
-		const {
+		let {
 			meal,
 			ingredients,
 			prepMethod,
@@ -40,6 +40,33 @@ export default class Recipe {
 			foodImageURL,
 			category,
 		} = this.params;
+		let categoryImageURL = "";
+		switch (category) {
+			case "Vegetables and legumes/beans":
+				categoryImageURL =
+					"https://thumbs.dreamstime.com/z/various-assortment-legumes-beans-soy-chickpeas-lentils-green-peas-healthy-eating-concept-vegetable-proteins-dark-concrete-131501584.jpg";
+				break;
+			case "Fruits":
+				categoryImageURL =
+					"https://media.istockphoto.com/photos/fresh-mixed-fruits-picture-id467652436?b=1&k=20&m=467652436&s=170667a&w=0&h=SgDVjLV5rfJ-kJ80GYcQJ4CL1R0n4LoxTYXixnSZuWs=";
+				break;
+			case "Grain Food":
+				categoryImageURL =
+					"https://media-cldnry.s-nbcnews.com/image/upload/t_fit-2000w,f_auto,q_auto:best/newscms/2020_22/1574082/whole-grain-bread-te-main2-200528.jpg";
+				break;
+			case "Milk, cheese, eggs and alternatives":
+				categoryImageURL =
+					"https://media.wsimag.com/attachments/e93e9eb9c2850d7ffe69d0383ed27baf224eafd3/store/fill/690/388/35defd11ef8de6b2a0af60645188fd44f1fdcc1e7ed397421e56f58cd7c7/Eggs-milk-and-cheese.jpg";
+				break;
+			case "Lean meats and poultry, fish and alternatives":
+				categoryImageURL =
+					"https://www.eatforhealth.gov.au/sites/default/files/images/the_guidelines/lean_meats_food_group_75650673_8_web.jpg";
+				break;
+			default:
+				categoryImageURL = "Select category...";
+				break;
+		}
+
 		let isValid = true;
 
 		if (!meal) {
@@ -96,6 +123,11 @@ export default class Recipe {
 			isValid = false;
 		}
 
+		if (category == "Select category...") {
+			msgs.push({ msg: "Category Required", class: "alert-danger" });
+			isValid = false;
+		}
+
 		if (!isValid) {
 			this.redirect("#/Share");
 
@@ -103,15 +135,18 @@ export default class Recipe {
 		}
 		let serverData = { ...this.params };
 		serverData.ingredients = ingredientsArray;
+		serverData.likesCounter = 0;
+		serverData.categoryImageURL = categoryImageURL;
 
-		// sharedData.isLoading = true;
-		// this.redirect("#/");
 		db.post("recipes", serverData, sessionStorage.getItem("loggedIn"))
 			.then((res) => {
+				console.log(res);
 				msgs.push({
 					msg: "Receipe created successful",
 					class: "alert-success",
 				});
+				//update all recipes array
+				allRecipes.push({ ...serverData, _id: res._id });
 				//then redirect the user
 				this.redirect("#/");
 			})
@@ -124,6 +159,59 @@ export default class Recipe {
 
 				//redirect the user
 				this.redirect("#/Share");
+			});
+	}
+	getDetails() {
+		let viewRecipe = allRecipes.find((item) => item._id.toString() === this.params.id);
+		console.log(viewRecipe);
+		const viewData = { msgs };
+		sharedData = {};
+		sharedData.foodImageURL
+		console.log(viewData);
+		this.loadPartials({
+			navbar: "../views/partials/navbar.hbs",
+			notifications: "../views/partials/notifications.hbs",
+			footer: "../views/partials/footer.hbs",
+		}).then(function () {
+			this.render("../views/app/details.hbs", viewRecipe).swap();
+			// clearStates();
+		});
+	}
+	getArchive() {
+		const id = this.params.id;
+		db.delete("recipes", id, sessionStorage.getItem("loggedIn"))
+		.then(() => {
+			// remove the recipe from the allRecipes array
+			allRecipes = allRecipes.filter((recipe) => recipe._id !== id);
+			this.redirect("#/");
+			msgs.push({msg: "Your recipe was archived", class: "alert-success"});
+		})
+	}
+
+	getLikes() {
+		const id = this.params.id;
+		const findRecipe = allRecipes.find((recipe) => recipe._id == id);
+		findRecipe.likesCounter = findRecipe.likesCounter += 1;
+		db.edit("recipes", id, findRecipe, sessionStorage.getItem("loggedIn"))
+			.then((res) => {
+				msgs.push({
+					msg: "Receipe liked!",
+					class: "alert-success",
+				});
+				let index = allRecipes.findIndex((recipe) => recipe._id == id);
+				allRecipes[index] = {...findRecipe, _id:id}
+				//then redirect the user
+				this.redirect("#/");
+			})
+			.catch((err) => {
+				//create an error message
+				msgs.push({
+					msg: "Database Error",
+					class: "alert-danger",
+				});
+
+				//redirect the user
+				this.redirect("#/");
 			});
 	}
 }
