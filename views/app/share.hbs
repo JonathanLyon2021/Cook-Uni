@@ -3,11 +3,15 @@
 
 <form
 	class="text-center p-5 form-layout"
-	action="#/handleShare"
+	action="{{#if editMode}}#/handleEdit{{else}}#/handleShare{{/if}}"
 	method="POST"
 	id="share-receipt-form"
 >
+	{{#if editMode}}
+	<p class="h4 mb-4">Edit Recipe</p>
+	{{else}}
 	<p class="h4 mb-4">Share Recipe</p>
+	{{/if}}
 
 	<input
 		type="text"
@@ -15,6 +19,7 @@
 		name="meal"
 		class="form-control mb-4"
 		placeholder="Meal"
+		value = "{{meal}}"
 	/>
 
 	<input
@@ -23,6 +28,7 @@
 		name="ingredients"
 		class="form-control mb-4"
 		placeholder="Ingredients"
+		value = "{{ingredients}}"
 	/>
 
 	<textarea
@@ -31,7 +37,8 @@
 		name="prepMethod"
 		class="form-control mb-4"
 		placeholder="Method of preparation"
-	></textarea>
+
+	>{{prepMethod}}</textarea>
 
 	<textarea
 		type="text"
@@ -39,7 +46,8 @@
 		name="description"
 		class="form-control mb-4"
 		placeholder="Description"
-	></textarea>
+		
+	>{{description}}</textarea>
 
 	<input
 		type="text"
@@ -47,9 +55,11 @@
 		name="foodImageURL"
 		class="form-control mb-4"
 		placeholder="Food Image URL..."
+		value = "{{foodImageURL}}"
 	/>
 
-	<select name="category">
+	<select name="category" value = "{{category}}">
+
 		<option selected>Select category...</option>
 
 		<option selected>Vegetables and legumes/beans</option>
@@ -64,10 +74,16 @@
 		
 	</select>
 
-	<button
-		class="btn btn-danger w-25 m-auto my-4 btn-block"
-		type="submit"
-	>Share it</button>
+	{{#if editMode}}
+	<button class="btn btn-danger w-25 m-auto my-4 btn-block" type="submit">Edit it</button>
+	{{else}}
+	<button class="btn btn-danger w-25 m-auto my-4 btn-block" type="submit">Share it</button>
+	{{/if}}
+
+	{{#if editMode}}
+	<input type= "hidden" name= "id" value="{{id}}">
+	{{/if}}
+
 </form>
 
 {{>footer}}

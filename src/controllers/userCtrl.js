@@ -3,7 +3,6 @@
 export default class User {
 	getRegistration() {
 		const viewData = { loggedIn, msgs };
-		console.log(viewData);
 		this.loadPartials({
 			navbar: "../views/partials/navbar.hbs",
 			notifications: "../views/partials/notifications.hbs",
@@ -15,7 +14,6 @@ export default class User {
 	}
 
 	postRegistration() {
-		console.log("postRegistration");
 		const { firstName, lastName, username, password, repeatPassword } =
 			this.params;
 
@@ -40,7 +38,6 @@ export default class User {
 		if (!validator.equals(password, repeatPassword)) {
 			msgs.push({ msg: "Passwords do not match", class: "alert-danger" });
 		}
-		console.log(msgs);
 		if (msgs.length !== 0) {
 			this.redirect("#/Registration");
 
@@ -70,7 +67,6 @@ export default class User {
 	}
 	getLogin() {
 		const viewData = { loggedIn, msgs };
-		console.log(viewData);
 		this.loadPartials({
 			navbar: "../views/partials/navbar.hbs",
 			notifications: "../views/partials/notifications.hbs",
@@ -126,7 +122,7 @@ export default class User {
 				const firstName = sessionStorage.getItem("firstName");
 				const lastName = sessionStorage.getItem("lastName");
 
-				sharedData.username = `${firstName} ${lastName}`;
+				navData.username = `${firstName} ${lastName}`;
 				//create a successful login message
 				msgs.push({
 					msg: "Login Successful",
@@ -149,7 +145,6 @@ export default class User {
 
 	getLogout() {
 		const token = sessionStorage.getItem("loggedIn");
-		console.log(token);
 		db.logout(token)
 			.then((res) => {
 				msgs = [];

@@ -9,7 +9,8 @@ window.msgs = [];
 window.sharedData = {};
 window.allRecipes = [];
 window.isLoading = false;
-
+window.msgCounter = 0;
+window.navData = {};
 
 const app = Sammy("#rooter", function () {
 	this.use("Handlebars", "hbs");
@@ -61,6 +62,11 @@ const app = Sammy("#rooter", function () {
 	// @access   Private
 	this.post("#/handleShare", recipeCtrl.postHandleShare);
 
+	// @route    POST  /
+	// @desc     allows user to edit recipe
+	// @access   Private
+	this.post("#/handleEdit", recipeCtrl.postEditShare);
+
 	// @route    GET  /
 	// @desc    getting the details of the recipe
 	// @access   Private
@@ -75,6 +81,13 @@ const app = Sammy("#rooter", function () {
 	// @desc     likes counter
 	// @access   Private
 	this.get("#/likes/:id", recipeCtrl.getLikes);
+
+	// @route    GET  /
+	// @desc    edit recipe
+	// @access   Private
+	this.get("#/edit/:id", recipeCtrl.getEditShare);
+
+	
 });
 
 app.run("#/");
