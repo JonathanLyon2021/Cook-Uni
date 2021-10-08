@@ -4,7 +4,7 @@ import Kinvey from "./helpers/kinvey";
 
 //determine wether or not the user is logged in
 window.loggedIn = false;
-window.db = new Kinvey("kid_HygXSUrft", "018f8ac64fd04124820f30424c08d9e6");
+window.db = new Kinvey("kid_SyjW7E0Et", "fc641d24be164294868e1c44ed9dd0cb");
 window.msgs = [];
 window.sharedData = {};
 window.allRecipes = [];
@@ -71,7 +71,7 @@ const app = Sammy("#rooter", function () {
 	// @desc    getting the details of the recipe
 	// @access   Private
 	this.get("#/details/:id", recipeCtrl.getDetails);
-	
+
 	// @route    GET  /
 	// @desc    delete recipe
 	// @access   Private
@@ -86,8 +86,6 @@ const app = Sammy("#rooter", function () {
 	// @desc    edit recipe
 	// @access   Private
 	this.get("#/edit/:id", recipeCtrl.getEditShare);
-
-	
 });
 
 app.run("#/");
