@@ -131,7 +131,7 @@ export default class Recipe {
 
 			return;
 		}
-		let serverData = { ...this.params };
+		let serverData = { ...this.params };//all the users data they just filled in
 		serverData.ingredients = ingredientsArray;
 		serverData.likesCounter = 0;
 		serverData.categoryImageURL = categoryImageURL;
@@ -373,7 +373,7 @@ export default class Recipe {
 
 			return;
 		}
-		let serverData = { ...this.params };
+		let serverData = { ...this.params };//grabbing all the input parameters
 		serverData.ingredients = ingredientsArray;
 		serverData.likesCounter = 0;
 		serverData.categoryImageURL = categoryImageURL;
@@ -391,6 +391,7 @@ export default class Recipe {
 
 				let index = allRecipes.findIndex((recipe) => recipe._id == id);
 				allRecipes[index] = { ...res, _id: id };
+				
 				//then redirect the user
 				this.redirect("#/");
 			})
